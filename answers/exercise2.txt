@@ -1,0 +1,6 @@
+tn-stalber@Patheigenx:~/Desktop/Helsinki/fs-containers$ docker run -it ubuntu bash
+root@68805048c61e:/# mkdir -p /usr/src/app
+root@68805048c61e:/# touch /usr/src/app/index.js
+root@68805048c61e:/# exit
+exit
+tn-stalber@Patheigenx:~/Desktop/Helsinki/fs-containers$
