@@ -1,0 +1,8 @@
+tn-stalber@Patheigenx:~/Desktop/Helsinki/fs-containers$ docker start -i hopeful_shirley
+root@f0498393e1ea:/# apt-get update && apt-get -y install nano
+root@f0498393e1ea:/# mkdir -p /usr/src/app
+root@f0498393e1ea:/# touch /usr/src/app/index.js
+root@f0498393e1ea:/# nano /usr/src/app/index.js
+root@f0498393e1ea:/# exit
+exit
+tn-stalber@Patheigenx:~/Desktop/Helsinki/fs-containers$
