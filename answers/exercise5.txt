@@ -1,0 +1,2 @@
+tn-stalber@Patheigenx:~/Desktop/Helsinki/fs-containers$ docker build -t helsinki-curler .
+tn-stalber@Patheigenx:~/Desktop/Helsinki/fs-containers$ docker run helsinki-curler
