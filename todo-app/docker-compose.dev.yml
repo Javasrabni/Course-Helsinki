@@ -7,14 +7,42 @@ services:
     volumes:
       - ./todo-frontend:/usr/src/app
       - /usr/src/app/node_modules
-    # Port tidak di-expose ke host karena akses akan melalui Nginx
 
   nginx:
     image: nginx:1.25-alpine
     ports:
-      # Akses frontend dari host melalui localhost:8080
       - 8080:80
     volumes:
       - ./nginx.dev.conf:/etc/nginx/nginx.conf:ro
     depends_on:
       - frontend
+      - backend
+
+  backend:
+    image: todo-backend-dev
+    build:
+      context: ./todo-backend
+      dockerfile: dev.Dockerfile
+    volumes:
+      - ./todo-backend:/usr/src/app
+      - /usr/src/app/node_modules
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - MONGO_URL=mongodb://the_username:the_password@mongo:27017/the_database?authSource=admin
+    depends_on:
+      - mongo
+      - redis
+
+  mongo:
+    image: mongo:7.0
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=the_username
+      - MONGO_INITDB_ROOT_PASSWORD=the_password
+      - MONGO_INITDB_DATABASE=the_database
+    volumes:
+      - ./todo-backend/mongo_data_fresh:/data/db
+
+  redis:
+    image: redis:7-alpine
+    volumes:
+      - ./todo-backend/redis_data:/data
