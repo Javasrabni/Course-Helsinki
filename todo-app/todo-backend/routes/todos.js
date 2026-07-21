@@ -1,9 +1,6 @@
 const express = require('express');
 const { Todo } = require('../mongo');
-const { get, set } = require('../redis');
 const router = express.Router();
-
-const singleRouter = express.Router();
 
 /* GET todos listing. */
 router.get('/', async (req, res) => {
@@ -17,43 +14,38 @@ router.post('/', async (req, res) => {
     text: req.body.text,
     done: false
   });
-
-  const currentCount = await get('added_todos');
-  const count = currentCount ? parseInt(currentCount, 10) : 0;
-  await set('added_todos', count + 1);
-
   res.send(todo);
 });
 
-const findByIdMiddleware = async (req, res, next) => {
+/* Middleware untuk mencari Todo berdasarkan ID */
+const findWithId = async (req, res, next) => {
   const { id } = req.params;
-  req.todo = await Todo.findById(id);
-  if (!req.todo) return res.sendStatus(404);
-  next();
+  try {
+    req.todo = await Todo.findById(id);
+    if (!req.todo) return res.sendStatus(404);
+    next();
+  } catch (error) {
+    return res.sendStatus(404);
+  }
 };
 
-singleRouter.use(findByIdMiddleware);
+const singleRouter = express.Router();
 
-/* GET single todo. */
-singleRouter.get('/', async (req, res) => {
-  res.send(req.todo);
-});
-
-/* PUT todo. */
-singleRouter.put('/', async (req, res) => {
-  req.todo.text = req.body.text;
-  req.todo.done = req.body.done;
-  
-  await req.todo.save();
-  res.send(req.todo);
-});
-
-/* DELETE todo. */
+/* DELETE todo */
 singleRouter.delete('/', async (req, res) => {
   await req.todo.deleteOne();
   res.sendStatus(200);
 });
 
-router.use('/:id', singleRouter);
+/* PUT todo */
+singleRouter.put('/', async (req, res) => {
+  if (req.body.text !== undefined) req.todo.text = req.body.text;
+  if (req.body.done !== undefined) req.todo.done = req.body.done;
+  
+  await req.todo.save();
+  res.send(req.todo);
+});
+
+router.use('/:id', findWithId, singleRouter);
 
 module.exports = router;
