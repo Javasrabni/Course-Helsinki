@@ -1,0 +1,20 @@
+services:
+  frontend:
+    image: todo-frontend-dev
+    build:
+      context: ./todo-frontend
+      dockerfile: dev.Dockerfile
+    volumes:
+      - ./todo-frontend:/usr/src/app
+      - /usr/src/app/node_modules
+    # Port tidak di-expose ke host karena akses akan melalui Nginx
+
+  nginx:
+    image: nginx:1.25-alpine
+    ports:
+      # Akses frontend dari host melalui localhost:8080
+      - 8080:80
+    volumes:
+      - ./nginx.dev.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - frontend
