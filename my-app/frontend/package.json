@@ -1,0 +1,6 @@
+{
+  "name": "dummy-frontend",
+  "scripts": {
+    "dev": "npx serve -l 5173"
+  }
+}

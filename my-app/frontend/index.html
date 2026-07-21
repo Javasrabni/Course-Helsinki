@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<body>
+  <h1>Dummy Fullstack App</h1>
+  <p id="msg">Loading API...</p>
+  <script>
+    fetch('/api/hello')
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('msg').innerText = data.message;
+      });
+  </script>
+</body>
+</html>
